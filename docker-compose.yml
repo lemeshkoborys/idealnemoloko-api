@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:10
+    env_file:
+      - config/db/db_env
+    networks:
+      - db_network
+    volumes:
+      - db_volume
+
+  api:
+    build: .
+    volumes:
+      - .:/api
+      - static_volume:/api/static
+    networks:  # <-- here
+      - nginx_network
+      - db_network
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:1.13
+    ports:
+      - 8000:80
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/api/static
+    depends_on:
+      - api
+    networks:  # <-- here
+      - nginx_network
+
+networks:  # <-- and here
+  nginx_network:
+    driver: bridge
+  db_network:
+    driver: bridge
+
+volumes:
+  db_volume:
+  static_volume:
