@@ -25,7 +25,7 @@ SECRET_KEY = 'h9s33#kz!cjf#h=bepvwdd10f$7w9)=slne4nndd!isr&i=2d-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'idealnemoloko.com', '185.223.113.235']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'idealnemoloko.com', 'idealnemoloko.digioceideal.pp.ua']
 
 cloudinary.config(
   cloud_name = "syplemstudio",
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,11 +60,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS_ORIGIN_WHITELIST = (
-#     'localhost:3000',
-#     '127.0.0.1:3000',
-#     'idealnemoloko.com'
-# )
+CORS_ORIGIN_WHITELIST = (
+    'localhost:3000',
+    '127.0.0.1:3000',
+    'idealnemoloko.com',
+    'idealnemoloko.digioceideal.pp.ua'
+)
 
 ROOT_URLCONF = 'api.urls'
 
