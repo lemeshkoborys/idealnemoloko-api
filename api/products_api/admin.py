@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Product, ProductRus
+from .models import Product
 from .forms import ProductForm
 
 
-@admin.register(Product, ProductRus)
+@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
 
     form = ProductForm

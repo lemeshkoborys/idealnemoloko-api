@@ -28,6 +28,7 @@ services:
       - 8000:80
     volumes:
       - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/api/static
     depends_on:
       - api
     networks:  # <-- here
