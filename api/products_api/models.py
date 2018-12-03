@@ -59,21 +59,7 @@ class Product(models.Model):
     image_for_product_page = CloudinaryField(
         'Картинка для раздела Продукция'
     )
-
-    inner_gradient_color = models.CharField(
-        max_length=7,
-        null=False,
-        blank=False,
-        verbose_name='Код внутреннего цвета градиента (web HEX)'
-    )
-
-    outer_gradient_color = models.CharField(
-        max_length=7,
-        null=False,
-        blank=False,
-        verbose_name='Код внешнего цвета градиента (web HEX)'
-    )
-
+    
     content = ArrayField(
         models.TextField(
             null=False,
