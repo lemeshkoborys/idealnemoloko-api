@@ -5,9 +5,9 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
 
-RUN mkdir -p /api
+RUN mkdir /api
 WORKDIR /api
 COPY requirements.txt /api
 RUN pip install -r requirements.txt

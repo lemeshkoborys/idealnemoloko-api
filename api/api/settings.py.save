@@ -25,7 +25,7 @@ SECRET_KEY = 'h9s33#kz!cjf#h=bepvwdd10f$7w9)=slne4nndd!isr&i=2d-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'idealnemoloko.com', 'idealnemoloko.digioceideal.pp.ua']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'idealnemoloko.com', '104.248.138.81']
 
 cloudinary.config(
   cloud_name = "syplemstudio",
@@ -61,11 +61,11 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
-    '127.0.0.1:3000',
-    'idealnemoloko.com',
-    'idealnemoloko.digioceideal.pp.ua',
-    'digioceideal.pp.ua:3000'
+     'localhost:3000',
+     '127.0.0.1:3000',
+     'idealnemoloko.com',
+     'https://goldsipa.github.io/idealnemoloko-react/',
+     '
 )
 
 ROOT_URLCONF = 'api.urls'
