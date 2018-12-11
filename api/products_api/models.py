@@ -41,13 +41,6 @@ class Product(models.Model):
         help_text='Пример - "Напій ультрапастеризований гречаний 2,5% жиру"'
     )
 
-    title_subtitle_color = models.CharField(
-        max_length=7,
-        null=False,
-        blank=False,
-        verbose_name='Код цвета заголовка и подзаголовка (web HEX)'
-    )
-
     image = CloudinaryField(
         'Картинка'
     )
