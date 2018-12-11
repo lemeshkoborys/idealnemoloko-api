@@ -117,3 +117,7 @@ class Recipe(models.Model):
     )
 
     image = CloudinaryField('Изображение статьи')
+
+    def __str__(self):
+        return self.title
+    
