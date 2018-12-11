@@ -84,7 +84,7 @@ class Recipe(models.Model):
             max_length=255,
             verbose_name='Элемент списка'
         ),
-        verbose_name='Метод преготовления',
+        verbose_name='Метод преготовления на РУССКОМ',
         help_text='Каждый новый элемент с новой строки. Без пустых строк!'
     )
 
