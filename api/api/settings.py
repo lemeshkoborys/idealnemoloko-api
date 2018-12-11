@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'products_api',
     'corsheaders',
     'drf_multiple_model',
+    'recipes_api',
+    'tinymce'
 ]
 
 MIDDLEWARE = [
