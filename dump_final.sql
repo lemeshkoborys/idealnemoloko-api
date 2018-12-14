@@ -386,7 +386,6 @@ CREATE TABLE public.products (
     title_rus character varying(120) NOT NULL,
     subtitle character varying(255) NOT NULL,
     subtitle_rus character varying(255) NOT NULL,
-    title_subtitle_color character varying(7) NOT NULL,
     image character varying(255) NOT NULL,
     cereal_image character varying(255) NOT NULL,
     image_for_product_page character varying(255) NOT NULL,
@@ -401,7 +400,11 @@ CREATE TABLE public.products (
     calories double precision NOT NULL,
     proteins double precision NOT NULL,
     carbohydrates double precision NOT NULL,
-    cholesterol double precision NOT NULL
+    cholesterol double precision NOT NULL,
+    big_cardboard_weight integer,
+    small_cardboard_weight integer,
+    CONSTRAINT products_big_cardboard_weight_check CHECK ((big_cardboard_weight >= 0)),
+    CONSTRAINT products_small_cardboard_weight_check CHECK ((small_cardboard_weight >= 0))
 );
 
 
@@ -427,6 +430,55 @@ ALTER TABLE public.products_id_seq OWNER TO db_role;
 --
 
 ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
+
+
+--
+-- Name: recipes; Type: TABLE; Schema: public; Owner: db_role
+--
+
+CREATE TABLE public.recipes (
+    id integer NOT NULL,
+    title character varying(300) NOT NULL,
+    title_rus character varying(300) NOT NULL,
+    subtitle character varying(300) NOT NULL,
+    subtitle_rus character varying(300) NOT NULL,
+    ingridients character varying(255)[] NOT NULL,
+    ingridients_rus character varying(255)[] NOT NULL,
+    howto character varying(255)[] NOT NULL,
+    howto_rus character varying(255)[] NOT NULL,
+    is_vegan boolean NOT NULL,
+    is_vegetarian boolean NOT NULL,
+    endline character varying(255)[] NOT NULL,
+    image character varying(255) NOT NULL,
+    endline_rus character varying(255)[] NOT NULL,
+    bold_text text NOT NULL,
+    bold_text_rus text NOT NULL,
+    is_not_hypolactasian boolean NOT NULL
+);
+
+
+ALTER TABLE public.recipes OWNER TO db_role;
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE; Schema: public; Owner: db_role
+--
+
+CREATE SEQUENCE public.recipes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipes_id_seq OWNER TO db_role;
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: db_role
+--
+
+ALTER SEQUENCE public.recipes_id_seq OWNED BY public.recipes.id;
 
 
 --
@@ -500,6 +552,13 @@ ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: recipes id; Type: DEFAULT; Schema: public; Owner: db_role
+--
+
+ALTER TABLE ONLY public.recipes ALTER COLUMN id SET DEFAULT nextval('public.recipes_id_seq'::regclass);
+
+
+--
 -- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: db_role
 --
 
@@ -548,6 +607,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 26	Can change Продукт	7	change_product
 27	Can delete Продукт	7	delete_product
 28	Can view Продукт	7	view_product
+29	Can add Рецепт	8	add_recipe
+30	Can change Рецепт	8	change_recipe
+31	Can delete Рецепт	8	delete_recipe
+32	Can view Рецепт	8	view_recipe
 \.
 
 
@@ -556,7 +619,7 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
-3	pbkdf2_sha256$120000$XpPHyJgBSnWD$/SzhQTZbuuNdW3VEr4kOZF/i4akQb0S+mw9+V0zv6PI=	2018-11-16 11:23:26.293659+00	t	admin				t	t	2018-11-15 19:35:08.970036+00
+3	pbkdf2_sha256$120000$XpPHyJgBSnWD$/SzhQTZbuuNdW3VEr4kOZF/i4akQb0S+mw9+V0zv6PI=	2018-12-11 11:52:53.904129+00	t	admin				t	t	2018-11-15 19:35:08.970036+00
 \.
 
 
@@ -594,6 +657,9 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 11	2018-11-16 08:55:52.357179+00	3	УЛЮБЛЕНА ВІВСЯНКА	2	[{"changed": {"fields": ["content", "content_rus"]}}]	7	3
 12	2018-11-16 11:26:16.905948+00	3	УЛЮБЛЕНА ВІВСЯНКА	2	[{"changed": {"fields": ["content", "content_rus"]}}]	7	3
 13	2018-11-16 11:27:28.80853+00	4	УЛЮБЛЕНА ГРЕЧКА	2	[]	7	3
+14	2018-12-11 12:35:12.738972+00	1	Recipe object (1)	1	[{"added": {}}]	8	3
+15	2018-12-14 15:06:50.285838+00	4	УЛЮБЛЕНА ГРЕЧКА	2	[{"changed": {"fields": ["small_cardboard_weight", "big_cardboard_weight"]}}]	7	3
+16	2018-12-14 15:07:05.155157+00	3	УЛЮБЛЕНА ВІВСЯНКА	2	[{"changed": {"fields": ["small_cardboard_weight", "big_cardboard_weight"]}}]	7	3
 \.
 
 
@@ -609,6 +675,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 5	contenttypes	contenttype
 6	sessions	session
 7	products_api	product
+8	recipes_api	recipe
 \.
 
 
@@ -634,6 +701,15 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 15	products_api	0001_initial	2018-11-15 19:29:36.626034+00
 16	sessions	0001_initial	2018-11-15 19:29:36.639206+00
 17	products_api	0002_auto_20181203_0900	2018-12-03 07:00:31.922144+00
+18	recipes_api	0001_initial	2018-12-11 11:40:14.639716+00
+19	recipes_api	0002_auto_20181211_1343	2018-12-11 11:45:05.665838+00
+20	recipes_api	0003_auto_20181211_1344	2018-12-11 11:45:05.831216+00
+21	recipes_api	0004_auto_20181211_1410	2018-12-11 12:10:45.396771+00
+22	recipes_api	0005_auto_20181211_1418	2018-12-11 12:34:48.67127+00
+23	recipes_api	0006_auto_20181211_1532	2018-12-11 13:32:42.350478+00
+24	products_api	0003_remove_product_title_subtitle_color	2018-12-11 14:10:23.304591+00
+25	products_api	0004_auto_20181214_1705	2018-12-14 15:05:27.744867+00
+26	recipes_api	0007_auto_20181214_1713	2018-12-14 15:13:28.513563+00
 \.
 
 
@@ -646,6 +722,7 @@ COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 iuk1h2z6nndyo9ya74gbhi099f9izpeg	MDM5OWIzNTc4NTViMTZmNjM3YjA1ZGVkYjE5NGIwNzBmNzdlMjk2Nzp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJiYmY5MzEwZDNlOTQ4ZjY2ZTNhODE2ZDk0ZjEzNjRjMmExZWUyNjMzIn0=	2018-11-29 20:51:11.006487+00
 qdnvjvsdtgxnw0krv9gxf0op9o03pq43	MDM5OWIzNTc4NTViMTZmNjM3YjA1ZGVkYjE5NGIwNzBmNzdlMjk2Nzp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJiYmY5MzEwZDNlOTQ4ZjY2ZTNhODE2ZDk0ZjEzNjRjMmExZWUyNjMzIn0=	2018-11-30 08:54:21.701296+00
 3uawxz49t6ogrysphpq5hkf8rfcgka9m	MDM5OWIzNTc4NTViMTZmNjM3YjA1ZGVkYjE5NGIwNzBmNzdlMjk2Nzp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJiYmY5MzEwZDNlOTQ4ZjY2ZTNhODE2ZDk0ZjEzNjRjMmExZWUyNjMzIn0=	2018-11-30 11:23:26.295705+00
+ltwvolkjpi9yvj01lrgumdkg3farn3wo	MDM5OWIzNTc4NTViMTZmNjM3YjA1ZGVkYjE5NGIwNzBmNzdlMjk2Nzp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJiYmY5MzEwZDNlOTQ4ZjY2ZTNhODE2ZDk0ZjEzNjRjMmExZWUyNjMzIn0=	2018-12-25 11:52:53.958793+00
 \.
 
 
@@ -653,9 +730,18 @@ qdnvjvsdtgxnw0krv9gxf0op9o03pq43	MDM5OWIzNTc4NTViMTZmNjM3YjA1ZGVkYjE5NGIwNzBmNzd
 -- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: db_role
 --
 
-COPY public.products (id, title, title_rus, subtitle, subtitle_rus, title_subtitle_color, image, cereal_image, image_for_product_page, content, content_rus, list_heading, list_heading_rus, about_list, about_list_rus, silly_comment, silly_comment_rus, calories, proteins, carbohydrates, cholesterol) FROM stdin;
-3	УЛЮБЛЕНА ВІВСЯНКА	ЛЮБИМАЯ ОВСЯНКА	Напій ультрапастеризований вівсяний 2,5% жиру	Напиток ультрапастеризованный овсяный 2,5% жира	#ff7d00	image/upload/v1542312017/br3vnmjhjpieiql21ahh.png	image/upload/v1542312018/m4e9enzcj9idue8iftea.png	image/upload/v1542312018/h0uaq8jowgvy2ovakcdb.png	{"Тільки уяви, овес – це дієвий засіб від стресу. Він відновлює душевну рівновагу і допомагає долати повсякденні труднощі. Як? Один ковток нашого нового 100% українського вівсяного напою і всі твої проблеми відійдуть на другий план. Бо на першому з’явиться питання «Ну як так смачно?».","Все просто – компанія «Люстдорф» створила його із 5 натуральних компонентів: води, вівсяної муки, соняшникової олії, карагенану (червоні морські водорості) та солі."}	{"Только представь, овёс - это эффективное средство от стресса. Он восстанавливает душевное равновесие и помогает преодолевать повседневные трудности. Как? Один глоток нашего нового 100% украинского овсяного напитка и все твои проблемы отойдут на второй план. Потому что на первом появится вопрос «Ну как так вкусно?».","Все просто - компания «Люстдорф» создала его из 5 натуральных компонентов: воды, овсяной муки, подсолнечного масла, карагенана (красные морские водоросли) и соли."}	ЧОМУ ОВЕС ОСОБЛИВИЙ?	ПОЧЕМУ ОВЁС ОСОБЕННЫЙ?	{"він регулює вміст глюкози і покращує згортання крові","турбується про обмін речовин, печінку і щитовидну залозу","допомагає шлунку, ниркам та кісточкам","в ньому є клітковина, для очищення організму","а ще фосфор, кремній і вітаміни групи B для мозку, пам’яті, концентрації та зміцнення нервів"}	{"он регулирует содержание глюкозы и улучшает свёртываемость крови","заботится об обмене веществ, печени и щитовидной железе","помогает желудку, почкам и костям","в нём есть клетчатка, для очищения организма","а ещё фосфор, кремний и витамины группы В для мозга, памяти, концентрации и укрепления нервов"}	Овес заряджає енергією і навіть про твою вагу турбується. Такими корисними ковтки ще не були ☺	Овёс заряжает энергией и даже беспокоится о твоём весе. Такими полезными глотки ещё не были ☺	52.5	1	6.5	0
-4	УЛЮБЛЕНА ГРЕЧКА	ЛЮБИМАЯ ГРЕЧКА	Напій ультрапастеризований гречаний 2,5% жиру	Напиток ультрапастеризованный гречневый 2,5% жира	#7c4331	image/upload/v1542312233/fq0btxbmlgrholb4qszi.png	image/upload/v1542312234/ai3vgsx8r8dqcli9shdx.png	image/upload/v1542312234/glacyo68c1xvgcllriec.png	{"А ти вже знаєш, що гречка – це справжній супергерой серед круп? Вона нашому мозку допомагає думати, нервам не напружуватись, а настрою завжди бути на хвилі позитиву.","Саме тому компанія «Люстдорф» створила перший 100% рослинний смачно-корисний напій з української гречки. В ньому 5 натуральних компонентів: вода, гречана мука, соняшникова олія, карагенан (червоні морські водорості), трохи солі. І все."}	{"А ты уже знаешь, что гречка - это настоящий супергерой среди круп? Она помогает нашему мозгу думать, нервам не напрягаться, а настроению всегда быть на волне позитива.","Именно поэтому компания «Люстдорф» создала первый 100% растительный вкусно-полезный напиток из украинской гречки. В нём 5 натуральных компонентов: вода, гречневая мука, подсолнечное масло, карагенан (красные морские водоросли), немного соли. И всё."}	ХОЧЕШ БІЛЬШЕ ПРО КОРИСТЬ ГРЕЧКИ?	ХОЧЕШЬ БОЛЬШЕ О ПОЛЬЗЕ ГРЕЧКИ?	{"В ній багато заліза та вітаміну Е – вони допомагають забезпечувати всі органи киснем","цинк, для метаболізму вітаміну Е","калій, для кісточок і серця","йод, який впливає на ріст, розвиток та обмін речовин","фтор – найважливіший для міцності наших зубів","вітамін РР і група В, що турбується про нервову систему та серце"}	{"В ней много железа и витамина Е - они помогают обеспечивать все органы кислородом","цинк, для метаболизма витамина Е","калий, для костей и сердца","йод, который влияет на рост, развитие и обмен веществ","фтор - самый важный для крепости наших зубов","витамин РР и группа В, которые заботятся о нервной системе и сердце"}	Гречка навіть від безсоння допомагає. Ну як її не любити? ☺	Гречка даже от бессонницы помогает. Ну как её не любить? ☺	52.5	1	6.5	0
+COPY public.products (id, title, title_rus, subtitle, subtitle_rus, image, cereal_image, image_for_product_page, content, content_rus, list_heading, list_heading_rus, about_list, about_list_rus, silly_comment, silly_comment_rus, calories, proteins, carbohydrates, cholesterol, big_cardboard_weight, small_cardboard_weight) FROM stdin;
+4	УЛЮБЛЕНА ГРЕЧКА	ЛЮБИМАЯ ГРЕЧКА	Напій ультрапастеризований гречаний 2,5% жиру	Напиток ультрапастеризованный гречневый 2,5% жира	image/upload/v1542312233/fq0btxbmlgrholb4qszi.png	image/upload/v1542312234/ai3vgsx8r8dqcli9shdx.png	image/upload/v1542312234/glacyo68c1xvgcllriec.png	{"А ти вже знаєш, що гречка – це справжній супергерой серед круп? Вона нашому мозку допомагає думати, нервам не напружуватись, а настрою завжди бути на хвилі позитиву.","Саме тому компанія «Люстдорф» створила перший 100% рослинний смачно-корисний напій з української гречки. В ньому 5 натуральних компонентів: вода, гречана мука, соняшникова олія, карагенан (червоні морські водорості), трохи солі. І все."}	{"А ты уже знаешь, что гречка - это настоящий супергерой среди круп? Она помогает нашему мозгу думать, нервам не напрягаться, а настроению всегда быть на волне позитива.","Именно поэтому компания «Люстдорф» создала первый 100% растительный вкусно-полезный напиток из украинской гречки. В нём 5 натуральных компонентов: вода, гречневая мука, подсолнечное масло, карагенан (красные морские водоросли), немного соли. И всё."}	ХОЧЕШ БІЛЬШЕ ПРО КОРИСТЬ ГРЕЧКИ?	ХОЧЕШЬ БОЛЬШЕ О ПОЛЬЗЕ ГРЕЧКИ?	{"В ній багато заліза та вітаміну Е – вони допомагають забезпечувати всі органи киснем","цинк, для метаболізму вітаміну Е","калій, для кісточок і серця","йод, який впливає на ріст, розвиток та обмін речовин","фтор – найважливіший для міцності наших зубів","вітамін РР і група В, що турбується про нервову систему та серце"}	{"В ней много железа и витамина Е - они помогают обеспечивать все органы кислородом","цинк, для метаболизма витамина Е","калий, для костей и сердца","йод, который влияет на рост, развитие и обмен веществ","фтор - самый важный для крепости наших зубов","витамин РР и группа В, которые заботятся о нервной системе и сердце"}	Гречка навіть від безсоння допомагає. Ну як її не любити? ☺	Гречка даже от бессонницы помогает. Ну как её не любить? ☺	52.5	1	6.5	0	1000	250
+3	УЛЮБЛЕНА ВІВСЯНКА	ЛЮБИМАЯ ОВСЯНКА	Напій ультрапастеризований вівсяний 2,5% жиру	Напиток ультрапастеризованный овсяный 2,5% жира	image/upload/v1542312017/br3vnmjhjpieiql21ahh.png	image/upload/v1542312018/m4e9enzcj9idue8iftea.png	image/upload/v1542312018/h0uaq8jowgvy2ovakcdb.png	{"Тільки уяви, овес – це дієвий засіб від стресу. Він відновлює душевну рівновагу і допомагає долати повсякденні труднощі. Як? Один ковток нашого нового 100% українського вівсяного напою і всі твої проблеми відійдуть на другий план. Бо на першому з’явиться питання «Ну як так смачно?».","Все просто – компанія «Люстдорф» створила його із 5 натуральних компонентів: води, вівсяної муки, соняшникової олії, карагенану (червоні морські водорості) та солі."}	{"Только представь, овёс - это эффективное средство от стресса. Он восстанавливает душевное равновесие и помогает преодолевать повседневные трудности. Как? Один глоток нашего нового 100% украинского овсяного напитка и все твои проблемы отойдут на второй план. Потому что на первом появится вопрос «Ну как так вкусно?».","Все просто - компания «Люстдорф» создала его из 5 натуральных компонентов: воды, овсяной муки, подсолнечного масла, карагенана (красные морские водоросли) и соли."}	ЧОМУ ОВЕС ОСОБЛИВИЙ?	ПОЧЕМУ ОВЁС ОСОБЕННЫЙ?	{"він регулює вміст глюкози і покращує згортання крові","турбується про обмін речовин, печінку і щитовидну залозу","допомагає шлунку, ниркам та кісточкам","в ньому є клітковина, для очищення організму","а ще фосфор, кремній і вітаміни групи B для мозку, пам’яті, концентрації та зміцнення нервів"}	{"он регулирует содержание глюкозы и улучшает свёртываемость крови","заботится об обмене веществ, печени и щитовидной железе","помогает желудку, почкам и костям","в нём есть клетчатка, для очищения организма","а ещё фосфор, кремний и витамины группы В для мозга, памяти, концентрации и укрепления нервов"}	Овес заряджає енергією і навіть про твою вагу турбується. Такими корисними ковтки ще не були ☺	Овёс заряжает энергией и даже беспокоится о твоём весе. Такими полезными глотки ещё не были ☺	52.5	1	6.5	0	1000	250
+\.
+
+
+--
+-- Data for Name: recipes; Type: TABLE DATA; Schema: public; Owner: db_role
+--
+
+COPY public.recipes (id, title, title_rus, subtitle, subtitle_rus, ingridients, ingridients_rus, howto, howto_rus, is_vegan, is_vegetarian, endline, image, endline_rus, bold_text, bold_text_rus, is_not_hypolactasian) FROM stdin;
+1	Вівсянка	Вівсянка	Хочете снідати смачно та з користю?	Хочете снідати смачно та з користю?	{"0,5 склянки вівсяних пластівців","1 склянка «Ідеаль Немолоко» 2,5%","1 ч. л. меду (за бажанням)","сіль за бажанням"}	{"0,5 склянки вівсяних пластівців","1 склянка «Ідеаль Немолоко» 2,5%","1 ч. л. меду (за бажанням)","сіль за бажанням"}	{"Доведіть «Ідеаль Немолоко» до кипіння,постійно помішуючи, додайте вівсяні пластівці та варіть на повільному вогні 5-7 хв.  Готово? Вимкніть та підсоліть.","Якщо хочете більше смакових та кольорових відтінків, додайте у готову кашу мед та прикрасьте її ягодами або фруктами."}	{"Доведіть «Ідеаль Немолоко» до кипіння,постійно помішуючи, додайте вівсяні пластівці та варіть на повільному вогні 5-7 хв.  Готово? Вимкніть та підсоліть.","Якщо хочете більше смакових та кольорових відтінків, додайте у готову кашу мед та прикрасьте її ягодами або фруктами."}	t	f	{"ДЛЯ ВЕГЕТАРІАНЦІВ,","ТИХ, ХТО НЕ ПЕРЕНОСИТЬ ЛАКТОЗУ"}	image/upload/v1544531712/vhjashen3tgh4cjglvqr.png	{"ДЛЯ ВЕГЕТАРІАНЦІВ,","ТИХ, ХТО НЕ ПЕРЕНОСИТЬ ЛАКТОЗУ"}	Спробуйте приготувати кашу на рослинному молоці. \r\nВівсянка – або як її ще називають «найкорисніша з каш» – \r\nі «Ідеаль Немолоко» у дуеті створять подвоєну користь \r\nі зарядять енергією на увесь день. А ваш організм отримає \r\nще більше рослинного білку та харчових волокон.	Спробуйте приготувати кашу на рослинному молоці. \r\nВівсянка – або як її ще називають «найкорисніша з каш» – \r\nі «Ідеаль Немолоко» у дуеті створять подвоєну користь \r\nі зарядять енергією на увесь день. А ваш організм отримає \r\nще більше рослинного білку та харчових волокон.	f
 \.
 
 
@@ -677,7 +763,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: db_role
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 28, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 32, true);
 
 
 --
@@ -705,21 +791,21 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: db_role
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 13, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 16, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: db_role
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 7, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 8, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: db_role
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 17, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 26, true);
 
 
 --
@@ -727,6 +813,13 @@ SELECT pg_catalog.setval('public.django_migrations_id_seq', 17, true);
 --
 
 SELECT pg_catalog.setval('public.products_id_seq', 4, true);
+
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: db_role
+--
+
+SELECT pg_catalog.setval('public.recipes_id_seq', 1, true);
 
 
 --
@@ -871,6 +964,14 @@ ALTER TABLE ONLY public.django_session
 
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipes recipes_pkey; Type: CONSTRAINT; Schema: public; Owner: db_role
+--
+
+ALTER TABLE ONLY public.recipes
+    ADD CONSTRAINT recipes_pkey PRIMARY KEY (id);
 
 
 --
