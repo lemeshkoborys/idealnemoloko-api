@@ -95,6 +95,11 @@ class Recipe(models.Model):
 
     is_vegetarian = models.BooleanField(
         verbose_name='Вегетарианское',
+        default=True
+    )
+
+    is_not_hypolactasian = models.BooleanField(
+        verbose_name='Для тех, кно не переносит лактозу',
         default=False
     )
 

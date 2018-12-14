@@ -52,7 +52,19 @@ class Product(models.Model):
     image_for_product_page = CloudinaryField(
         'Картинка для раздела Продукция'
     )
+
+    small_cardboard_weight = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Вес маленькой упаковки"
+    )
     
+    big_cardboard_weight = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Вес маленькой упаковки"
+    )
+
     content = ArrayField(
         models.TextField(
             null=False,
