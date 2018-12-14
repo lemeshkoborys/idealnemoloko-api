@@ -99,7 +99,7 @@ class Recipe(models.Model):
     )
 
     is_not_hypolactasian = models.BooleanField(
-        verbose_name='Для тех, кно не переносит лактозу',
+        verbose_name='Для тех, кто не переносит лактозу',
         default=False
     )
 

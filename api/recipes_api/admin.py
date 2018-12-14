@@ -12,4 +12,5 @@ class RecipeModelAdmin(admin.ModelAdmin):
         'title_rus',
         'is_vegan',
         'is_vegetarian',
+        'is_not_hypolactasian',
     )

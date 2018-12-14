@@ -5,12 +5,12 @@ class RecipeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['ingridients'].delimiter = "\n" or "\r"
-        self.fields['ingridients_rus'].delimiter = "\n" or "\r"
-        self.fields['howto'].delimiter = "\n" or "\r"
-        self.fields['howto_rus'].delimiter = "\n" or "\r"
-        self.fields['endline'].delimiter = "\n" or "\r"
-        self.fields['endline_rus'].delimiter = "\n" or "\r"
+        self.fields['ingridients'].delimiter = "\n" or "\r" or "\n\r" or "\r\n"
+        self.fields['ingridients_rus'].delimiter = "\n" or "\r" or "\n\r" or "\r\n"
+        self.fields['howto'].delimiter = "\n" or "\r" or "\n\r" or "\r\n"
+        self.fields['howto_rus'].delimiter = "\n" or "\r" or "\n\r" or "\r\n"
+        self.fields['endline'].delimiter = "\n" or "\r" or "\n\r" or "\r\n"
+        self.fields['endline_rus'].delimiter = "\n" or "\r" or "\n\r" or "\r\n"
 
     class Meta:
         model = Recipe
