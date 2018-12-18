@@ -43,7 +43,7 @@ class Product(models.Model):
 
     image = CloudinaryField('Картинка')
 
-    image_small = CloudinaryField('Изображение статьи', blank=True)
+    image_small = CloudinaryField('Изображение нькой упаковки (если есть)', blank=True)
 
     cereal_image = CloudinaryField('Картинка зерна')
 
