@@ -25,7 +25,7 @@ SECRET_KEY = 'h9s33#kz!cjf#h=bepvwdd10f$7w9)=slne4nndd!isr&i=2d-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'idealnemoloko.com', 'idealnemoloko.digioceideal.pp.ua']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'idealnemoloko.com', '54.37.138.23']
 
 cloudinary.config(
   cloud_name = "syplemstudio",
