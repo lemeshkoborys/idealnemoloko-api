@@ -29,27 +29,25 @@ class Recipe(models.Model):
     subtitle = models.CharField(
         max_length=300,
         verbose_name='Подзаголовок',
-        blank=False,
-        null=False,
+        blank=True,
         default=""
     )
 
     subtitle_rus = models.CharField(
         max_length=300,
         verbose_name='Подзаголовок на РУССКОМ',
-        blank=False,
-        null=False,
+        blank=True,
         default=""
     )
 
     bold_text = models.TextField(
-        verbose_name='текс под подзаголовком',
+        verbose_name='Tекс под подзаголовком',
         blank=False,
         null=False
     )
 
     bold_text_rus = models.TextField(
-        verbose_name='текс под подзаголовком на РУССКОМ',
+        verbose_name='Tекс под подзаголовком на РУССКОМ',
         blank=False,
         null=False
     )
