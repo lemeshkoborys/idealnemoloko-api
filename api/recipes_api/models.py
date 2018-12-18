@@ -109,7 +109,8 @@ class Recipe(models.Model):
             verbose_name='Элемент списка'
         ),
         verbose_name='Заключительное слово',
-        help_text='Каждый абзац с новой строки. Без пустых строк!'
+        help_text='Каждый абзац с новой строки. Без пустых строк!',
+        blank=True
     )
 
     endline_rus = ArrayField(
@@ -118,7 +119,8 @@ class Recipe(models.Model):
             verbose_name='Элемент списка'
         ),
         verbose_name='Заключительное слово на РУССКОМ',
-        help_text='Каждый абзац с новой строки. Без пустых строк!'
+        help_text='Каждый абзац с новой строки. Без пустых строк!',
+        blank=True
     )
 
     def __str__(self):
