@@ -660,6 +660,7 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 14	2018-12-11 12:35:12.738972+00	1	Recipe object (1)	1	[{"added": {}}]	8	3
 15	2018-12-14 15:06:50.285838+00	4	УЛЮБЛЕНА ГРЕЧКА	2	[{"changed": {"fields": ["small_cardboard_weight", "big_cardboard_weight"]}}]	7	3
 16	2018-12-14 15:07:05.155157+00	3	УЛЮБЛЕНА ВІВСЯНКА	2	[{"changed": {"fields": ["small_cardboard_weight", "big_cardboard_weight"]}}]	7	3
+17	2018-12-17 12:03:10.380794+00	1	Вівсянка	2	[]	8	3
 \.
 
 
@@ -791,7 +792,7 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: db_role
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 16, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 17, true);
 
 
 --

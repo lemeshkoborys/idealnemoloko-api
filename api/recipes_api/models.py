@@ -24,6 +24,8 @@ class Recipe(models.Model):
         blank=False
     )
 
+    image = CloudinaryField('Изображение статьи')
+
     subtitle = models.CharField(
         max_length=300,
         verbose_name='Подзаголовок',
@@ -120,8 +122,6 @@ class Recipe(models.Model):
         verbose_name='Заключительное слово на РУССКОМ',
         help_text='Каждый абзац с новой строки. Без пустых строк!'
     )
-
-    image = CloudinaryField('Изображение статьи')
 
     def __str__(self):
         return self.title

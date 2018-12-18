@@ -41,17 +41,13 @@ class Product(models.Model):
         help_text='Пример - "Напій ультрапастеризований гречаний 2,5% жиру"'
     )
 
-    image = CloudinaryField(
-        'Картинка'
-    )
+    image = CloudinaryField('Картинка')
 
-    cereal_image = CloudinaryField(
-        'Картинка зерна'
-    )
+    image_small = CloudinaryField('Изображение статьи', blank=True)
 
-    image_for_product_page = CloudinaryField(
-        'Картинка для раздела Продукция'
-    )
+    cereal_image = CloudinaryField('Картинка зерна')
+
+    image_for_product_page = CloudinaryField('Картинка для раздела Продукция')
 
     small_cardboard_weight = models.PositiveIntegerField(
         blank=True,
