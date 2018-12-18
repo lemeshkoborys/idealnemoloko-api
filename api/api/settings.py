@@ -67,7 +67,8 @@ CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:3000',
     'idealnemoloko.com',
     'idealnemoloko.digioceideal.pp.ua',
-    'digioceideal.pp.ua:3000'
+    'digioceideal.pp.ua:3000',
+    '54.37.138.23',
 )
 
 ROOT_URLCONF = 'api.urls'
