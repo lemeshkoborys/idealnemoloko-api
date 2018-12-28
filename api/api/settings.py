@@ -62,14 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
-    '127.0.0.1:3000',
-    'idealnemoloko.com',
-    'idealnemoloko.digioceideal.pp.ua',
-    'digioceideal.pp.ua:3000',
-    '54.37.138.23',
-)
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'api.urls'
 
