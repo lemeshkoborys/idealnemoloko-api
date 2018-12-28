@@ -1,6 +1,6 @@
 certifi==2018.10.15
 cloudinary==1.14.0
-Django==2.1
+Django>=2.1.2
 django-cors-headers==2.4.0
 django-tinymce==2.7.0
 djangorestframework==3.7.7
